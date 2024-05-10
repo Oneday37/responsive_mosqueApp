@@ -1,16 +1,3 @@
-# daftar_masjid
+#Responsive Mosque App
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Responsive Mosque App merupakan sebuah aplikasi yang akan menampilkan beberapa daftar dari masjid-masjid yang ada di Indonesia. Aplikasi ini akan menampilkan beberapa informasi terkait sebuah masjid, seperti lokasi dari masjid tersebut, gambar dari masjid tersebut, hingga deskripsi singkat mengenai masjid tersebut. Keistimewaan dari aplikasi ini terletak pada responsivitasnya. Aplikasi ini memiliki beberapa tampilan layout yang berbeda beda tergantung dengan tingkat kelebaran layar dari perangkat yang digunakan. Meskipun aplikasi ini mempunyai beberapa tampilan yang berbeda, namun hal tersebut tidak akan menyulitkan user untuk menggunakan aplikasi tersebut. Aplikasi Ini dibangun dengan menggunakan widget LayoutBuilder() yang dimana widget tersebut dapat digunakan untuk mengatur tampilan dari sebuah aplikasi sesuai dengan kemauan dari pengembang aplikasi tersebut, sehingga nantinya aplikasi yang dibangun dengan menggunakan widget LayoutBuilder() akan dapat memiliki beberapa opsi pilihan yang berbeda beda
