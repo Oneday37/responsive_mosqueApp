@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: "List Masjid Responsive",
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(useMaterial3: true),
       home: MainPage(),
     );
   }

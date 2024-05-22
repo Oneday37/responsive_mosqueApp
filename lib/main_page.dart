@@ -1,10 +1,12 @@
+import 'dart:ui';
+
 import 'package:daftar_masjid/list_masjid.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'detail_page.dart';
 import 'masjid_models.dart';
 
@@ -15,12 +17,12 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("List Masjid"),
+          title: const Text("List Masjid"),
           centerTitle: true,
         ),
         body: LayoutBuilder(builder: (context, constraints) {
@@ -66,9 +68,9 @@ class _MainPageState extends State<MainPage> {
                   fontSize: 17, fontWeight: FontWeight.bold)),
           subtitle: Text(
             "${mosque.kota} - ${mosque.provinsi}",
-            style: TextStyle(fontSize: 13),
+            style: const TextStyle(fontSize: 13),
           ),
-          trailing: Icon(Icons.keyboard_arrow_right_rounded),
+          trailing: const Icon(Icons.keyboard_arrow_right_rounded),
           onTap: () {
             Get.to(DetailPage(mosque: mosque));
           },
@@ -78,30 +80,102 @@ class _MainPageState extends State<MainPage> {
   }
 
   List<Widget> _listMasjidLandscape() {
+    //Membuat sebuah controller untuk animasi yang berisikan durasi yang akan digunakan pada proses animasi
+    final AnimationController _controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+
+//Mengatur posisi awal dari animasi
+    final Animation<Offset> _animation = Tween<Offset>(
+      begin: const Offset(1, 0),
+      end: Offset.zero,
+    ).animate(
+        //properties parent akan mengembalikan var _controller yang berisikan durasi animasi
+        //dan properties curve akan menentukan animasinya, seperti apa
+        CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     return List<Widget>.generate(masjid.length, (index) {
       Masjid mosque = masjid[index];
-      return Card(
-        child: InkWell(
-          child: Column(
+      return MouseRegion(
+        //Sebuah function jika cursor mouse berada pada widget maka animasi akan bergerak maju / ke tempat tujuan
+        onEnter: (event) {
+          _controller.forward();
+        },
+        //Sebuah function jika cursor mouse tidak berada pada area widget maka animasi akan bergerak mundur / ke tempat asal
+        onExit: (event) {
+          _controller.reverse();
+        },
+        child: ClipRRect(
+          clipBehavior: Clip.hardEdge,
+          child: Stack(
             children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 4,
-                child: Image.network(
-                  width: double.infinity,
-                  mosque.urlImage,
-                  fit: BoxFit.cover,
+              Card(
+                elevation: 5,
+                child: GestureDetector(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 4,
+                        child: Image.network(
+                          width: double.infinity,
+                          mosque.urlImage,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Expanded(
+                        child: ListTile(
+                            title: Text(mosque.nama),
+                            subtitle:
+                                Text("${mosque.kota} - ${mosque.provinsi}")),
+                      )
+                    ],
+                  ),
+                  onTap: () {
+                    Get.to(DetailPage(mosque: mosque));
+                  },
                 ),
               ),
-              Expanded(
-                child: ListTile(
-                    title: Text(mosque.nama),
-                    subtitle: Text("${mosque.kota} - ${mosque.provinsi}")),
+              SlideTransition(
+                //Widget untuk membuat efek transisi secara slide / bergesar
+                position: _animation,
+                child: ClipRRect(
+                  clipBehavior: Clip.hardEdge,
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: GestureDetector(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              mosque.nama,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const Divider(
+                              color: Colors.black,
+                              thickness: 1.7,
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              mosque.desc,
+                              style: Theme.of(context).textTheme.titleSmall,
+                              textAlign: TextAlign.justify,
+                              maxLines: 5,
+                            )
+                          ],
+                        ),
+                        onTap: () {
+                          Get.to(DetailPage(mosque: mosque));
+                        },
+                      ),
+                    ),
+                  ),
+                ),
               )
             ],
           ),
-          onTap: () {
-            Get.to(DetailPage(mosque: mosque));
-          },
         ),
       );
     });
